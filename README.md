@@ -7,8 +7,8 @@ I am inspired to make a chat app like this [react clone project](https://github.
 
 ## Status
 - i did something with the current room, manually put it in state because i dont know if it's giving back an object or nothing
-- removed istypingin for now
-
+- i need to see ALL the rooms, so fetch all the rooms user is subscribed to 
+- im not able to get all the rooms using server, i keep getting a 404. maybe running it on local computer might make a difference?
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been

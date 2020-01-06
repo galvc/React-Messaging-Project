@@ -36,6 +36,16 @@ app.post('/authenticate', (req, res) => {
   res.status(authData.status).send(authData.body)
 })
 
+app.get('/rooms', (req, res) => {
+    chatkit
+    .getRooms({})
+    .then(response => {
+        console.log('got rooms', response)
+        // res.send(response)
+    })
+    .catch(err => console.error(err))
+})
+
 
 const PORT = 3000
 app.listen(PORT, err => {

@@ -7,14 +7,15 @@ import {
 } from "@pusher/chatkit-client-react"
 import UsernameForm from './Components/UsernameForm'
 import ChatScreen from './ChatScreen'
+import axios from 'axios'
 
 const tokenProvider = new TokenProvider({
   url: "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/6c6a5d99-78d6-4550-917c-1e07fe8f5fab/token",
 });
 const instanceLocator = "v1:us1:6c6a5d99-78d6-4550-917c-1e07fe8f5fab"
 const userId = "usera"
-// const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io'
-const localhost = 'http://localhost:3000'
+const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io'
+// const localhost = 'http://localhost:3000'
 
 //https://github.com/pusher/build-a-slack-clone-with-react-and-pusher-chatkit#step-3-setup-a-basic-node-server
 class App extends Component {
@@ -27,7 +28,6 @@ class App extends Component {
     this.onUsernameSubmitted = this.onUsernameSubmitted.bind(this)
   }
 
-  //use axios later
   onUsernameSubmitted(username) {
     fetch(`${localhost}/users`, {
       method: 'POST',

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import Chatkit, { ChatManager } from "@pusher/chatkit-client"
 import MessageList from './Components/MessageList'
 import SendMessageForm from './Components/SendMessageForm'
@@ -7,8 +6,9 @@ import TypingIndicator from './Components/TypingIndicator'
 import WhosOnlineList from './Components/WhosOnlineList'
 import RoomList from './Components/RoomList'
 
-// const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
-const localhost = 'http://localhost:3000'
+const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
+// const localhost = 'http://localhost:3000'
+const axios = require('axios')
 
 class ChatScreen extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class ChatScreen extends Component {
             currentUser: {},
             currentRoom: {},
             messages: [],
-            rooms: [],
+            rooms: {},
             usersWhoAreTyping: [],
         }
 
@@ -80,26 +80,26 @@ class ChatScreen extends Component {
                 console.log('Error on connection', err)
             })
         this.getAllRooms()
-
+        // console.log(this.state.rooms);
     }
 
-    getAllRooms() {
-        // this.state.currentUser.getJoinableRooms()
-        //     .then(rooms => {
-        //         console.log(`these are the rooms ${rooms}`)
-        //         this.setState({ rooms: [...this.state.rooms, rooms] })
-        //     })
-        //     .catch(err => {
-        //         console.log(`Error getting joinable rooms: ${err}`)
-        //     })
-        axios
-            .get(`https://us1.pusherplatform.io/services/chatkit_token_provider/v1/6c6a5d99-78d6-4550-917c-1e07fe8f5fab/rooms`)
-            .then(response => (
-                // console.log(response)
-                this.setState({ rooms: response })
-            ))
-            .catch(error => console.log(`There was an error with getting the rooms: ${error}`))
-    }
+   async getAllRooms() {
+       try {
+        const rooms = await axios.get(`/rooms`)
+        console.log('getalllrooms shows ' + rooms)
+        return rooms
+       } catch(err) {
+           console.log(err)
+       }
+    //  axios.get(`/rooms`)
+    //   .then(rooms => {
+    //       console.log('getallrooms going through')
+    //     this.setState({
+    //       rooms
+    //     })
+    //   })
+    //   .catch(error => console.error('error in getallrooms function: ', error))
+  }
 
     sendMessage(text) {
         this.state.currentUser.sendSimpleMessage({
