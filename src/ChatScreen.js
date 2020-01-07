@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
-import Chatkit, { ChatManager } from "@pusher/chatkit-client"
+import { ChatManager } from "@pusher/chatkit-client"
+import Chatkit from '@pusher/chatkit-server';
 import MessageList from './Components/MessageList'
 import SendMessageForm from './Components/SendMessageForm'
 import TypingIndicator from './Components/TypingIndicator'
 import WhosOnlineList from './Components/WhosOnlineList'
 import RoomList from './Components/RoomList'
 
-const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
-// const localhost = 'http://localhost:3000'
+// const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
+const localhost = 'http://localhost:3000'
 const axios = require('axios')
+
+const chatkit = new Chatkit({
+    instanceLocator: 'v1:us1:6c6a5d99-78d6-4550-917c-1e07fe8f5fab',
+    key: 'a997b659-c3a6-4905-8674-cf62fa7fd2d2:gRuhe58vRd8Mzj1LNGPH2+5QDSx1coKBI9lG4fgUfJc=',
+})
 
 class ChatScreen extends Component {
     constructor(props) {
@@ -27,6 +33,7 @@ class ChatScreen extends Component {
     }
 
     componentDidMount() {
+
         const chatManager = new ChatManager({
             instanceLocator: 'v1:us1:6c6a5d99-78d6-4550-917c-1e07fe8f5fab',
             userId: this.props.currentUsername,
@@ -83,23 +90,12 @@ class ChatScreen extends Component {
         // console.log(this.state.rooms);
     }
 
-   async getAllRooms() {
-       try {
-        const rooms = await axios.get(`/rooms`)
-        console.log('getalllrooms shows ' + rooms)
-        return rooms
-       } catch(err) {
-           console.log(err)
-       }
-    //  axios.get(`/rooms`)
-    //   .then(rooms => {
-    //       console.log('getallrooms going through')
-    //     this.setState({
-    //       rooms
-    //     })
-    //   })
-    //   .catch(error => console.error('error in getallrooms function: ', error))
-  }
+    getAllRooms() {
+        chatkit.getRooms({})
+            .then(rooms => console.log(rooms))
+            .catch(err => console.error(err))
+
+    }
 
     sendMessage(text) {
         this.state.currentUser.sendSimpleMessage({

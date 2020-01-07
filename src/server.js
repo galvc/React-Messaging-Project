@@ -37,12 +37,8 @@ app.post('/authenticate', (req, res) => {
 })
 
 app.get('/rooms', (req, res) => {
-    chatkit
-    .getRooms({})
-    .then(response => {
-        console.log('got rooms', response)
-        // res.send(response)
-    })
+  chatkit.getRooms({})
+    .then(rooms => console.log(rooms))
     .catch(err => console.error(err))
 })
 
@@ -55,3 +51,5 @@ app.listen(PORT, err => {
     console.log(`Running on port ${PORT}`)
   }
 })
+
+module.exports = app;
