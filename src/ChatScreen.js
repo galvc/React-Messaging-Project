@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import { ChatManager } from "@pusher/chatkit-client"
+import { ChatManager, TokenProvider } from "@pusher/chatkit-client"
 import Chatkit from '@pusher/chatkit-server';
 import MessageList from './Components/MessageList'
 import SendMessageForm from './Components/SendMessageForm'
 import TypingIndicator from './Components/TypingIndicator'
 import WhosOnlineList from './Components/WhosOnlineList'
 import RoomList from './Components/RoomList'
-
+import JoinScreen from './Components/JoinScreen'
 // const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
-const localhost = 'http://localhost:3000'
-const axios = require('axios')
+// const localhost = 'http://localhost:3000'
 
 const chatkit = new Chatkit({
     instanceLocator: 'v1:us1:6c6a5d99-78d6-4550-917c-1e07fe8f5fab',
@@ -23,12 +22,21 @@ class ChatScreen extends Component {
             currentUser: {},
             currentRoom: {},
             messages: [],
-            rooms: {},
+            rooms: [],
+            joinedRooms: [],
+            joinableRooms: [],
+            roomToJoin: {},
             usersWhoAreTyping: [],
         }
 
         this.getAllRooms = this.getAllRooms.bind(this)
+        this.joinRoom = this.joinRoom.bind(this)
+        this.updateJoinedRooms = this.updateJoinedRooms.bind(this)
+        this.setJoinScreen = this.setJoinScreen.bind(this)
+        this.getRoomsToJoin = this.getRoomsToJoin.bind(this)
+        this.leaveRoom = this.leaveRoom.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
+        this.fetchMessagesByRoom = this.fetchMessagesByRoom.bind(this)
         this.sendTypingEvent = this.sendTypingEvent.bind(this)
     }
 
@@ -38,8 +46,8 @@ class ChatScreen extends Component {
             instanceLocator: 'v1:us1:6c6a5d99-78d6-4550-917c-1e07fe8f5fab',
             userId: this.props.currentUsername,
             // tokenProvider: new TokenProvider({ url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/6c6a5d99-78d6-4550-917c-1e07fe8f5fab/token' })
-            tokenProvider: new Chatkit.TokenProvider({
-                //this does not work url: 'http://localhost:3001/authenticate'
+            tokenProvider: new TokenProvider({
+                // url: '${localhost}/authenticate'
                 //might have to check later how client generated tokens work
                 url: `https://us1.pusherplatform.io/services/chatkit_token_provider/v1/6c6a5d99-78d6-4550-917c-1e07fe8f5fab/token`,
             }),
@@ -48,7 +56,14 @@ class ChatScreen extends Component {
         chatManager.connect()
             .then(currentUser => {
                 this.setState({ currentUser })
+                console.log(currentUser)
                 console.log('Successful connection', currentUser)
+                return currentUser
+            })
+            .then(currentUser => {
+                this.updateJoinedRooms()
+                this.getRoomsToJoin()
+            
                 return currentUser.subscribeToRoomMultipart({
                     roomId: '5f11538b-edae-4663-aceb-916539c2c81e',
                     messageLimit: 100,
@@ -90,13 +105,54 @@ class ChatScreen extends Component {
         // console.log(this.state.rooms);
     }
 
+
+    updateJoinedRooms() {
+        
+        //must keep the ...
+        const joinedRooms = [...this.state.currentUser.rooms]
+        this.setState({ joinedRooms })
+        console.log('this updates the current users joined rooms' + this.state.joinedRooms)
+    }
     getAllRooms() {
         chatkit.getRooms({})
-            .then(rooms => console.log(rooms))
+            .then(rooms => {
+                console.log(rooms)
+                this.setState({ rooms })
+            })
             .catch(err => console.error(err))
-
     }
 
+
+    getCurrentUserRooms() {
+        var cRooms = JSON.stringify(this.state.currentUser.roomStore.rooms)
+        console.log(`these are the current user's rooms: ${cRooms}`)
+        return this.state.currentUser.rooms
+        //use joined rooms
+    }
+    
+    getRoomsToJoin() {
+        this.state.currentUser.getJoinableRooms()
+            .then(rooms => {
+                this.setState({joinableRooms: rooms })
+                console.log('this is the updated state of joinable rooms: ' + JSON.stringify(this.state.joinableRooms))
+            })
+            .catch(err => {
+                console.log(`Error getting joinable rooms: ${err}`)
+            })
+    }
+
+    leaveRoom = (room) => {
+        console.log('leave room is clicked')
+        this.state.currentUser.leaveRoom({ roomId: room.id })
+        .then(room => {
+            this.updateJoinedRooms()
+            this.getRoomsToJoin()
+        })
+        .catch(err => {
+            console.log(`Error leaving room ${room.id}: ${err}`)
+        })
+        
+    }
     sendMessage(text) {
         this.state.currentUser.sendSimpleMessage({
             text,
@@ -110,6 +166,23 @@ class ChatScreen extends Component {
             })
     }
 
+    fetchMessagesByRoom = (room) => {
+        //mneed to track the oldest message wtf
+        this.state.currentUser.fetchMultipartMessages({
+            roomId: room.id,
+            initialId: 5,
+            direction: 'older',
+            limit: 10,
+        })
+        .then(messages => {
+            console.log('showing messages from fetch messages in chat screen')
+            this.setState({ messages })
+        })
+        .catch(err => {
+            console.log(`Error fetching messages: ${err}`)
+        })
+    }
+
     sendTypingEvent() {
         this.state.currentUser.isTypingIn({ roomId: this.state.currentRoom.id })
             .then(() => {
@@ -120,6 +193,26 @@ class ChatScreen extends Component {
             })
     }
 
+    joinRoom = room =>  {
+        console.log('joining from chatscreen ' + room.id)
+
+        this.state.currentUser.joinRoom({ roomId: room.id })
+        .then(room => {
+            console.log(`Joined room with ID: ${room.id}`)
+            this.updateJoinedRooms()
+            this.getRoomsToJoin()
+            this.setState({ roomToJoin: {} })
+        })
+        .catch(err => {
+            console.log(`Error joining room ${room.id}: ${err}`)
+        })
+    }
+
+    setJoinScreen = (room) => {
+        console.log('setjoinscreen works with room: ' + room.id)
+        this.setState({ roomToJoin: room })
+        console.log(this.state.roomToJoin)
+    }
     render() {
         const styles = {
             container: {
@@ -154,11 +247,21 @@ class ChatScreen extends Component {
                             currentUser={this.state.currentUser}
                             users={this.state.currentRoom.users}
                         />
-                        <RoomList rooms={this.state.rooms} />
+                        <RoomList 
+                            rooms={this.state.rooms} 
+                            setJoinScreen={this.setJoinScreen}
+                            joinARoom={this.joinRoom} 
+                            joinedRooms={this.state.joinedRooms}
+                            joinableRooms={this.state.joinableRooms}
+                            leaveRoom={this.leaveRoom}
+                            fetchMessages={this.fetchMessagesByRoom}
+                        />
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
                     </aside>
                     <section style={styles.chatListContainer}>
                         <h2>Chat PLACEHOLDER</h2>
+                        {Object.getOwnPropertyNames(this.state.roomToJoin).length >= 1 ? <JoinScreen roomToJoin={this.state.roomToJoin} joinARoom={this.joinRoom} /> : null }
+                        
                         <MessageList
                             messages={this.state.messages}
                             style={styles.chatListContainer}
