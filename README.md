@@ -15,9 +15,7 @@ I am inspired to make a chat app like this [react clone project](https://github.
 
 - looks like there is a bug with leaving the general room, but will look into it later
 - when to turn off isjoined and do i need it? is there a better way to show the component? 
-- once you have joined delete the message. i can think of deleting it once i have joined, but what if i don't join? what if i just go to a different room...?
-maybe this will work out better when i do the fetching of messages when room name is clicked
-- updated messages are not showing in messagelist
+
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been
@@ -44,6 +42,15 @@ joinable rooms get updated, just need to update the joined state. just used the 
 but i wonder if thats the best way to check..?
 best way to pass data and state between siblings?
 solution: share one state of an object instead of a boolean, to shorten the passing of so much data
+- once you have joined delete the message. i can think of deleting it once i have joined, but what if i don't join? what if i just go to a different room...?
+maybe this will work out better when i do the fetching of messages when room name is clicked
+solution: for  now i cleared the roomtojoin state in the fetching messages function
+- updated messages are not showing in messagelist
+solution: i removed the initial id in the method, it was optional anyway. i will take care of the fetching again later
+- i removed setjoinscreen, the only thing it does is update the state of roomtojoin. i just bundled it up with the fetchmessagesbyroom because the error
+returns a 401 status code which means they are not a member of that room. so they are already checking for that. though i still wonder if theres a better way 
+to let the component joinscreen know and show up for the alert
+
 
 ## Todo
 [x] Develop own UI - created UI in Figma
@@ -54,7 +61,7 @@ solution: share one state of an object instead of a boolean, to shorten the pass
 [x] join a room
 [] create a room
 [x] leave a room
-[] fetch messages of a room
+[x] fetch messages of a room
 [x] show u r not a member screen
 
 ##Readings

@@ -32,7 +32,6 @@ class ChatScreen extends Component {
         this.getAllRooms = this.getAllRooms.bind(this)
         this.joinRoom = this.joinRoom.bind(this)
         this.updateJoinedRooms = this.updateJoinedRooms.bind(this)
-        this.setJoinScreen = this.setJoinScreen.bind(this)
         this.getRoomsToJoin = this.getRoomsToJoin.bind(this)
         this.leaveRoom = this.leaveRoom.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
@@ -167,19 +166,26 @@ class ChatScreen extends Component {
     }
 
     fetchMessagesByRoom = (room) => {
-        //mneed to track the oldest message wtf
+        //mneed to track the oldest message wtf - optional
+        console.log('fetching message from room id: ' + room.id)
+        this.setState({ roomToJoin: {} }) //i wonder if this is the best location to clear the state?
         this.state.currentUser.fetchMultipartMessages({
             roomId: room.id,
-            initialId: 5,
             direction: 'older',
             limit: 10,
         })
         .then(messages => {
             console.log('showing messages from fetch messages in chat screen')
+            console.log(messages)
             this.setState({ messages })
         })
         .catch(err => {
             console.log(`Error fetching messages: ${err}`)
+
+            if(err.statusCode === 401) {
+                this.setState({ messages: [] })
+                this.setState({ roomToJoin: room })
+            }
         })
     }
 
@@ -208,11 +214,12 @@ class ChatScreen extends Component {
         })
     }
 
-    setJoinScreen = (room) => {
-        console.log('setjoinscreen works with room: ' + room.id)
-        this.setState({ roomToJoin: room })
-        console.log(this.state.roomToJoin)
-    }
+    //the only thinmg this does is update the state of roomtojoin
+    // setJoinScreen = (room) => {
+    //     console.log('setjoinscreen works with room: ' + room.id)
+    //     // this.setState({ roomToJoin: room })
+    //     // console.log(this.state.roomToJoin)
+    // }
     render() {
         const styles = {
             container: {

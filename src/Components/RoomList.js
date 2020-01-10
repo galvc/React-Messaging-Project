@@ -29,6 +29,7 @@ class RoomList extends Component {
 
     handleFetchMessages = (room) => {
         console.log('starting to fetch message from roomlist')
+        console.log(room.id)
         this.props.fetchMessages(room)
     }
     //click the room name of joined rooms and updat the state.messages 
@@ -47,7 +48,8 @@ class RoomList extends Component {
                 <ul>
                     {this.props.joinableRooms.map((room, index) => 
                         <li key={index}>
-                            <span onClick={() => this.handleIsJoined(room)}> {room.name}</span>
+                        {/* lets ry to route everything to fetch messages and do i tfrom there, otherwise we go back to isjoined */}
+                            <span onClick={() => this.handleFetchMessages(room)}> {room.name}</span>
                             <span onClick={() => this.handleJoin(room)}>Join Room</span>
                         </li>
                     )}
