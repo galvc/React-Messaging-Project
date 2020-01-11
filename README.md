@@ -7,14 +7,35 @@ I am inspired to make a chat app like this [react clone project](https://github.
 
 ## Status
 - i did something with the current room, manually put it in state because i dont know if it's giving back an object or nothing
-- replace the chat messages in the chatscreen with the messages of the new joined room
 - know if i am subscribed to the room or not, show a prompt or message
-- can i see the messages of a room without joining?
 - my rooms array change it to rooms i am a member of not all the rooms??? or do a filter inside the roomlist
 - i always join the first room in general because of the connect hooks in chatscreen
-
-- looks like there is a bug with leaving the general room, but will look into it later
-- when to turn off isjoined and do i need it? is there a better way to show the component? 
+- looks like there is a bug with leaving the general room the first time, but will look into it later
+- working on fetching the list of users when you open a room, getting users is triggered by both
+joining a room and clicking the room name. i either can make a state to open a room 
+or do a method for it. i am thinking of creating another method that does this instead of having several
+methods placed all over the place: (joinRoom) -> openRoom -> fetchmessages & fetchuserlist of current room
+speaking of state, openroom should also change the currentroom state, maybe that will trigger the user list state
+so that we may not need anymore additional functions
+- should i check if user is in the room or do i let the error handler do it for me?
+- what if I just put the joinscreen inside the roomlist? now i wont have to go through the parent component,
+all i would need to do is update the state when and if the user joins
+- i must be subscribed to the room to see the users
+i might not need to fetch messages if i just subscribe to it.. or? because i can only subscribe once.....??
+whats the difference between subscribing to a room to get messages and just fetching messages? - receiving realtime updates
+u are still part of the room even if you are disconnected. so to make it easie and better, just subscribe to the room instead 
+of using the joinroom function
+when subscribing twice is there a big difference? 
+- i cannot subscribe when i click the room name because it joins me as a member. might have to subscribe in a different way or...
+i will just do the handling with room list i think. i will not change this
+- subscribing to a room gives me a function not found error.... i believe it is because i did not wrap it in an array bracket
+apparently the messages are not iterable because i used a spread operator, i guess i should only use that when i am adding to the array?
+so im still wrong - i should use both array brackets and spread operator because the messages come one after the other and not in all one dump
+//im trying to disable the openrooms in roomlist, but the equality is not working,
+i am thinking maybe it's because the joinedroom state which is higher than the prop is not changing therefore the buttons stay the same (clickable)
+or maybe nott, bug is still there - it;s just not gonna work this way i will have t do the checking in state, component will nto be rendered every time i click
+so thats why there is no change
+http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
 
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
@@ -50,6 +71,12 @@ solution: i removed the initial id in the method, it was optional anyway. i will
 - i removed setjoinscreen, the only thing it does is update the state of roomtojoin. i just bundled it up with the fetchmessagesbyroom because the error
 returns a 401 status code which means they are not a member of that room. so they are already checking for that. though i still wonder if theres a better way 
 to let the component joinscreen know and show up for the alert
+- when to turn off isjoined and do i need it? is there a better way to show the component?  - no more isjoined
+- can i see the messages of a room without joining? - no, i have created a different screen to let the user know that you need to join first
+- replace the chat messages in the chatscreen with the messages of the new joined room - ok
+- i need to be subscribed first before i can set the users
+solutions: the only thing i really needed to do was make sure the currentRoom state isbeing updated, the users
+are being taken from the currentRoom anyway. so if that changes then the users will change and that will cascade down
 
 
 ## Todo
@@ -63,6 +90,9 @@ to let the component joinscreen know and show up for the alert
 [x] leave a room
 [x] fetch messages of a room
 [x] show u r not a member screen
+[] subscribe to a room
+[] update a room if you are admin
+[x] update the list of users when room changes
 
 ##Readings
 - https://towardsdatascience.com/passing-data-between-react-components-parent-children-siblings-a64f89e24ecf

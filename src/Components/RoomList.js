@@ -27,20 +27,24 @@ class RoomList extends Component {
         this.props.setJoinScreen(room)
     }
 
-    handleFetchMessages = (room) => {
-        console.log('starting to fetch message from roomlist')
+    handleOpenRoom = (room) => {
+        console.log('starting to open a room from roomlist')
         console.log(room.id)
-        this.props.fetchMessages(room)
+        this.props.openRoom(room)
     }
     //click the room name of joined rooms and updat the state.messages 
+    //if i am in the current room dont let me handle openroom
     render() {
+
         return (
             <div>
                 <h1>Room List</h1>
                 <ul>
                     {this.props.joinedRooms.map((room, index) => 
                         <li key={index}>
-                            <span onClick={() => this.handleFetchMessages(room)}>{room.name}</span>
+                            <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span>
+                        
+
                             <span onClick={() => this.handleLeave(room)}>Leave Room</span>
                         </li>
                     )}
@@ -48,8 +52,10 @@ class RoomList extends Component {
                 <ul>
                     {this.props.joinableRooms.map((room, index) => 
                         <li key={index}>
+                        {room.name}
+                        {/* <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span> */}
+
                         {/* lets ry to route everything to fetch messages and do i tfrom there, otherwise we go back to isjoined */}
-                            <span onClick={() => this.handleFetchMessages(room)}> {room.name}</span>
                             <span onClick={() => this.handleJoin(room)}>Join Room</span>
                         </li>
                     )}

@@ -21,8 +21,10 @@ class ChatScreen extends Component {
         this.state = {
             currentUser: {},
             currentRoom: {},
+            currentRoomUsers: [],
             messages: [],
             rooms: [],
+            users: [],
             joinedRooms: [],
             joinableRooms: [],
             roomToJoin: {},
@@ -31,8 +33,10 @@ class ChatScreen extends Component {
 
         this.getAllRooms = this.getAllRooms.bind(this)
         this.joinRoom = this.joinRoom.bind(this)
+        this.createRoom = this.createRoom.bind(this)
         this.updateJoinedRooms = this.updateJoinedRooms.bind(this)
         this.getRoomsToJoin = this.getRoomsToJoin.bind(this)
+        this.openRoom = this.openRoom.bind(this)
         this.leaveRoom = this.leaveRoom.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
         this.fetchMessagesByRoom = this.fetchMessagesByRoom.bind(this)
@@ -64,7 +68,7 @@ class ChatScreen extends Component {
                 this.getRoomsToJoin()
             
                 return currentUser.subscribeToRoomMultipart({
-                    roomId: '5f11538b-edae-4663-aceb-916539c2c81e',
+                    roomId: currentUser.rooms[0].id,
                     messageLimit: 100,
                     hooks: {
                         onMessage: message => {
@@ -105,11 +109,60 @@ class ChatScreen extends Component {
     }
 
 
+    openRoom = (room) => {
+        //this wil trigger fetch message, change the screen list and fetch user list or change its state
+        // this.fetchMessagesByRoom(room)
+        // this.setState({
+        //     currentRoom: room,
+        //     currentRoomUsers: room.users
+        // })
+        // console.log(room.users)
+       console.log('this is the currentroom' + this.state.currentRoom)
+        //if i am already in the currentroom dont do this....
+        //comparison is not working properly
+        
+        //i need to be subscribed first before i can set the users
+            this.setState({ 
+                messages: []
+            })
+            this.state.currentUser.subscribeToRoomMultipart({
+            roomId: room.id,
+            hooks: {
+                onMessage: message => {
+                console.log("received message", message)
+                this.setState({ messages: [ ...this.state.messages, message ] })
+                }
+            },
+            messageLimit: 10
+            })
+            .then(currentRoom => {
+                this.setState({ currentRoom })
+            })
+            .catch(error => {
+                console.error("error:", error);
+            })
+    }
+
+    createRoom() {
+        this.state.currentUser.createRoom({
+            id: '#general',
+            name: 'General',
+            private: true,
+            addUserIds: ['craig', 'kate'],
+            customData: { foo: 42 },
+        }).then(room => {
+            console.log(`Created room called ${room.name}`)
+            })
+        .catch(err => {
+            console.log(`Error creating room ${err}`)
+        })
+    }
+
     updateJoinedRooms() {
         
         //must keep the ...
-        const joinedRooms = [...this.state.currentUser.rooms]
-        this.setState({ joinedRooms })
+        // const joinedRooms = [...this.state.currentUser.rooms]
+        this.setState({ joinedRooms: [...this.state.currentUser.rooms ] })
         console.log('this updates the current users joined rooms' + this.state.joinedRooms)
     }
     getAllRooms() {
@@ -140,6 +193,7 @@ class ChatScreen extends Component {
             })
     }
 
+
     leaveRoom = (room) => {
         console.log('leave room is clicked')
         this.state.currentUser.leaveRoom({ roomId: room.id })
@@ -167,6 +221,8 @@ class ChatScreen extends Component {
 
     fetchMessagesByRoom = (room) => {
         //mneed to track the oldest message wtf - optional
+        //do i need to do checking for this or let the error make it work?
+        //or do i just show an error handler in the roomlist???????
         console.log('fetching message from room id: ' + room.id)
         this.setState({ roomToJoin: {} }) //i wonder if this is the best location to clear the state?
         this.state.currentUser.fetchMultipartMessages({
@@ -255,16 +311,16 @@ class ChatScreen extends Component {
                             users={this.state.currentRoom.users}
                         />
                         <RoomList 
-                            rooms={this.state.rooms} 
                             setJoinScreen={this.setJoinScreen}
                             joinARoom={this.joinRoom} 
                             joinedRooms={this.state.joinedRooms}
                             joinableRooms={this.state.joinableRooms}
                             leaveRoom={this.leaveRoom}
-                            fetchMessages={this.fetchMessagesByRoom}
+                            openRoom={this.openRoom}
                         />
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
                     </aside>
+                    <p onClick={() => this.createRoom() }>Create a room</p>
                     <section style={styles.chatListContainer}>
                         <h2>Chat PLACEHOLDER</h2>
                         {Object.getOwnPropertyNames(this.state.roomToJoin).length >= 1 ? <JoinScreen roomToJoin={this.state.roomToJoin} joinARoom={this.joinRoom} /> : null }
