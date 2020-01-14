@@ -68,7 +68,7 @@ class ChatScreen extends Component {
             .then(currentUser => {
                 this.updateJoinedRooms()
                 this.getRoomsToJoin()
-            
+
                 return currentUser.subscribeToRoomMultipart({
                     roomId: currentUser.rooms[0].id,
                     messageLimit: 100,
@@ -119,24 +119,24 @@ class ChatScreen extends Component {
         //     currentRoomUsers: room.users
         // })
         // console.log(room.users)
-       console.log('this is the currentroom' + this.state.currentRoom)
+        console.log('this is the currentroom' + this.state.currentRoom)
         //if i am already in the currentroom dont do this....
         //comparison is not working properly
-        
+
         //i need to be subscribed first before i can set the users
-            this.setState({ 
-                messages: []
-            })
-            this.state.currentUser.subscribeToRoomMultipart({
+        this.setState({
+            messages: []
+        })
+        this.state.currentUser.subscribeToRoomMultipart({
             roomId: room.id,
             hooks: {
                 onMessage: message => {
-                console.log("received message", message)
-                this.setState({ messages: [ ...this.state.messages, message ] })
+                    console.log("received message", message)
+                    this.setState({ messages: [...this.state.messages, message] })
                 }
             },
             messageLimit: 10
-            })
+        })
             .then(currentRoom => {
                 this.setState({ currentRoom })
             })
@@ -146,6 +146,7 @@ class ChatScreen extends Component {
     }
 
     createRoom() {
+        console.log('passed to create room successfully')
         // this.state.currentUser.createRoom({
         //     id: '#general',
         //     name: 'General',
@@ -161,10 +162,10 @@ class ChatScreen extends Component {
     }
 
     updateJoinedRooms() {
-        
+
         //must keep the ...
         // const joinedRooms = [...this.state.currentUser.rooms]
-        this.setState({ joinedRooms: [...this.state.currentUser.rooms ] })
+        this.setState({ joinedRooms: [...this.state.currentUser.rooms] })
         console.log('this updates the current users joined rooms' + this.state.joinedRooms)
     }
     getAllRooms() {
@@ -183,11 +184,11 @@ class ChatScreen extends Component {
         return this.state.currentUser.rooms
         //use joined rooms
     }
-    
+
     getRoomsToJoin() {
         this.state.currentUser.getJoinableRooms()
             .then(rooms => {
-                this.setState({joinableRooms: rooms })
+                this.setState({ joinableRooms: rooms })
                 console.log('this is the updated state of joinable rooms: ' + JSON.stringify(this.state.joinableRooms))
             })
             .catch(err => {
@@ -199,14 +200,14 @@ class ChatScreen extends Component {
     leaveRoom = (room) => {
         console.log('leave room is clicked')
         this.state.currentUser.leaveRoom({ roomId: room.id })
-        .then(room => {
-            this.updateJoinedRooms()
-            this.getRoomsToJoin()
-        })
-        .catch(err => {
-            console.log(`Error leaving room ${room.id}: ${err}`)
-        })
-        
+            .then(room => {
+                this.updateJoinedRooms()
+                this.getRoomsToJoin()
+            })
+            .catch(err => {
+                console.log(`Error leaving room ${room.id}: ${err}`)
+            })
+
     }
     sendMessage(text) {
         this.state.currentUser.sendSimpleMessage({
@@ -232,19 +233,19 @@ class ChatScreen extends Component {
             direction: 'older',
             limit: 10,
         })
-        .then(messages => {
-            console.log('showing messages from fetch messages in chat screen')
-            console.log(messages)
-            this.setState({ messages })
-        })
-        .catch(err => {
-            console.log(`Error fetching messages: ${err}`)
+            .then(messages => {
+                console.log('showing messages from fetch messages in chat screen')
+                console.log(messages)
+                this.setState({ messages })
+            })
+            .catch(err => {
+                console.log(`Error fetching messages: ${err}`)
 
-            if(err.statusCode === 401) {
-                this.setState({ messages: [] })
-                this.setState({ roomToJoin: room })
-            }
-        })
+                if (err.statusCode === 401) {
+                    this.setState({ messages: [] })
+                    this.setState({ roomToJoin: room })
+                }
+            })
     }
 
     sendTypingEvent() {
@@ -257,19 +258,19 @@ class ChatScreen extends Component {
             })
     }
 
-    joinRoom = room =>  {
+    joinRoom = room => {
         console.log('joining from chatscreen ' + room.id)
 
         this.state.currentUser.joinRoom({ roomId: room.id })
-        .then(room => {
-            console.log(`Joined room with ID: ${room.id}`)
-            this.updateJoinedRooms()
-            this.getRoomsToJoin()
-            this.setState({ roomToJoin: {} })
-        })
-        .catch(err => {
-            console.log(`Error joining room ${room.id}: ${err}`)
-        })
+            .then(room => {
+                console.log(`Joined room with ID: ${room.id}`)
+                this.updateJoinedRooms()
+                this.getRoomsToJoin()
+                this.setState({ roomToJoin: {} })
+            })
+            .catch(err => {
+                console.log(`Error joining room ${room.id}: ${err}`)
+            })
     }
 
     //the only thinmg this does is update the state of roomtojoin
@@ -312,23 +313,27 @@ class ChatScreen extends Component {
                             currentUser={this.state.currentUser}
                             users={this.state.currentRoom.users}
                         />
-                        <RoomList 
+                        <RoomList
                             setJoinScreen={this.setJoinScreen}
-                            joinARoom={this.joinRoom} 
+                            joinARoom={this.joinRoom}
                             joinedRooms={this.state.joinedRooms}
                             joinableRooms={this.state.joinableRooms}
                             leaveRoom={this.leaveRoom}
                             openRoom={this.openRoom}
                         />
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
-                        <p onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen }) }>Create a room</p>
+                        <p onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen })}>Create a room</p>
 
                     </aside>
                     <section style={styles.chatListContainer}>
                         <h2>Chat PLACEHOLDER</h2>
-                        {this.state.isCreateRoomOpen && <CreateRoom /> }
-                        {Object.getOwnPropertyNames(this.state.roomToJoin).length >= 1 ? <JoinScreen roomToJoin={this.state.roomToJoin} joinARoom={this.joinRoom} /> : null }
-                        
+                        {this.state.isCreateRoomOpen &&
+                            <CreateRoom createRoom={this.createRoom} />
+                        }
+
+                        {Object.getOwnPropertyNames(this.state.roomToJoin).length >= 1 ?
+                            <JoinScreen roomToJoin={this.state.roomToJoin} joinARoom={this.joinRoom} /> : null}
+
                         <MessageList
                             messages={this.state.messages}
                             style={styles.chatListContainer}
