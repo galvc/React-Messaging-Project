@@ -37,6 +37,10 @@ or maybe nott, bug is still there - it;s just not gonna work this way i will hav
 so thats why there is no change
 http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
 -trying to create a room. i want to change the chatlist component to create a room component
+-validity of inputs are both false even though in state they are true
+i guess when the function retrieves the data of the state it doesn't retrieve it in real time which is why either the validation
+doesnt work real time or both equating to false
+
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been
