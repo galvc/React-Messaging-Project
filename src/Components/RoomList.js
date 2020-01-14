@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 
 
 //very helpful to understand functions inside stateless components
@@ -9,6 +10,20 @@ import React, { Component } from 'react'
 //https://stackoverflow.com/questions/29810914/react-js-onclick-cant-pass-value-to-method
 //https://gist.github.com/sebkouba/a5ac75153ef8d8827b98
 
+const Button = styled.div`
+    padding: 0.25em;
+    border: 1px solid black;
+`
+const RoomItem = styled.li`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+`
+
+const List = styled.ul`
+    padding-left: 0;
+`
 
 class RoomList extends Component {
 
@@ -39,28 +54,25 @@ class RoomList extends Component {
         return (
             <div>
                 <h1>Room List</h1>
-                <ul>
+                <List>
                     {this.props.joinedRooms.map((room, index) => 
-                        <li key={index}>
+                        <RoomItem key={index}>
                             <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span>
                         
 
-                            <span onClick={() => this.handleLeave(room)}>Leave Room</span>
-                        </li>
+                            <Button onClick={() => this.handleLeave(room)}>Leave Room</Button>
+                        </RoomItem>
                     )}
-                </ul>
-                <ul>
+                </List>
+                <List>
                     {this.props.joinableRooms.map((room, index) => 
-                        <li key={index}>
+                        <RoomItem key={index}>
                         {room.name}
-                        {/* <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span> */}
-
-                        {/* lets ry to route everything to fetch messages and do i tfrom there, otherwise we go back to isjoined */}
-                            <span onClick={() => this.handleJoin(room)}>Join Room</span>
-                        </li>
+                            <Button onClick={() => this.handleJoin(room)}>Join Room</Button>
+                        </RoomItem>
                     )}
                     
-                </ul>
+                </List>
                 
             </div>
         )

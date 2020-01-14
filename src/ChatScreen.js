@@ -7,6 +7,7 @@ import TypingIndicator from './Components/TypingIndicator'
 import WhosOnlineList from './Components/WhosOnlineList'
 import RoomList from './Components/RoomList'
 import JoinScreen from './Components/JoinScreen'
+import CreateRoom from './Components/CreateRoom'
 // const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
 // const localhost = 'http://localhost:3000'
 
@@ -29,6 +30,7 @@ class ChatScreen extends Component {
             joinableRooms: [],
             roomToJoin: {},
             usersWhoAreTyping: [],
+            isCreateRoomOpen: true,
         }
 
         this.getAllRooms = this.getAllRooms.bind(this)
@@ -144,18 +146,18 @@ class ChatScreen extends Component {
     }
 
     createRoom() {
-        this.state.currentUser.createRoom({
-            id: '#general',
-            name: 'General',
-            private: true,
-            addUserIds: ['craig', 'kate'],
-            customData: { foo: 42 },
-        }).then(room => {
-            console.log(`Created room called ${room.name}`)
-            })
-        .catch(err => {
-            console.log(`Error creating room ${err}`)
-        })
+        // this.state.currentUser.createRoom({
+        //     id: '#general',
+        //     name: 'General',
+        //     private: true,
+        //     addUserIds: ['craig', 'kate'],
+        //     customData: { foo: 42 },
+        // }).then(room => {
+        //     console.log(`Created room called ${room.name}`)
+        //     })
+        // .catch(err => {
+        //     console.log(`Error creating room ${err}`)
+        // })
     }
 
     updateJoinedRooms() {
@@ -319,10 +321,12 @@ class ChatScreen extends Component {
                             openRoom={this.openRoom}
                         />
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
+                        <p onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen }) }>Create a room</p>
+
                     </aside>
-                    <p onClick={() => this.createRoom() }>Create a room</p>
                     <section style={styles.chatListContainer}>
                         <h2>Chat PLACEHOLDER</h2>
+                        {this.state.isCreateRoomOpen && <CreateRoom /> }
                         {Object.getOwnPropertyNames(this.state.roomToJoin).length >= 1 ? <JoinScreen roomToJoin={this.state.roomToJoin} joinARoom={this.joinRoom} /> : null }
                         
                         <MessageList

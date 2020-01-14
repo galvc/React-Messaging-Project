@@ -36,7 +36,7 @@ i am thinking maybe it's because the joinedroom state which is higher than the p
 or maybe nott, bug is still there - it;s just not gonna work this way i will have t do the checking in state, component will nto be rendered every time i click
 so thats why there is no change
 http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
-
+-trying to create a room. i want to change the chatlist component to create a room component
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been
