@@ -37,10 +37,11 @@ or maybe nott, bug is still there - it;s just not gonna work this way i will hav
 so thats why there is no change
 http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
 -trying to create a room. i want to change the chatlist component to create a room component
--validity of inputs are both false even though in state they are true
-i guess when the function retrieves the data of the state it doesn't retrieve it in real time which is why either the validation
-doesnt work real time or both equating to false
-
+-creatin g a new room wont work because im passing an object within an object,. i made a new object before passing that into props and thats whats
+making it not work
+- i also have another problem where createroom() and createroom = () => how diff are they?
+- when i create a room, updat the roomlist and switch to that room
+what is the difference between being added and joining  a room in the hooks? - prpably the other one is for other users joining a room
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been
@@ -81,7 +82,11 @@ to let the component joinscreen know and show up for the alert
 - i need to be subscribed first before i can set the users
 solutions: the only thing i really needed to do was make sure the currentRoom state isbeing updated, the users
 are being taken from the currentRoom anyway. so if that changes then the users will change and that will cascade down
-
+-validity of inputs are both false even though in state they are true
+i guess when the function retrieves the data of the state it doesn't retrieve it in real time which is why either the validation
+doesnt work real time or both equating to false  - for now im using both instruction and error as the same line
+- the handlechange of privacy dioesnt work properly, i also need to convert it into boolean
+onaddedtoroom doesnt work - im using the wrong hooks this is for the  connection hook, i put it in the room subscription hook - IT WORKS NOW
 
 ## Todo
 [x] Develop own UI - created UI in Figma
@@ -90,13 +95,14 @@ are being taken from the currentRoom anyway. so if that changes then the users w
 [] Lock the window at set height so i dont have to scroll so far down cause there are so many msgs
 [x] display list of rooms
 [x] join a room
-[] create a room
+[x] create a room
 [x] leave a room
 [x] fetch messages of a room
 [x] show u r not a member screen
 [] subscribe to a room
 [] update a room if you are admin
 [x] update the list of users when room changes
+[] delete a room 
 
 ##Readings
 - https://towardsdatascience.com/passing-data-between-react-components-parent-children-siblings-a64f89e24ecf

@@ -58,7 +58,13 @@ class ChatScreen extends Component {
             }),
         })
 
-        chatManager.connect()
+        chatManager.connect({
+            onAddedToRoom: room => {
+            //should i change state or call the room fetch??...
+            this.setState({
+                joinedRooms: [...this.state.joinedRooms, room]
+            })},
+        })
             .then(currentUser => {
                 this.setState({ currentUser })
                 console.log(currentUser)
@@ -96,6 +102,7 @@ class ChatScreen extends Component {
                                 )
                             })
                         },
+
                         onPresenceChanged: () => this.forceUpdate()
                     }
                 });
@@ -145,20 +152,19 @@ class ChatScreen extends Component {
             })
     }
 
-    createRoom() {
+    createRoom(newRoom) {
         console.log('passed to create room successfully')
-        // this.state.currentUser.createRoom({
-        //     id: '#general',
-        //     name: 'General',
-        //     private: true,
-        //     addUserIds: ['craig', 'kate'],
-        //     customData: { foo: 42 },
-        // }).then(room => {
-        //     console.log(`Created room called ${room.name}`)
-        //     })
-        // .catch(err => {
-        //     console.log(`Error creating room ${err}`)
-        // })
+        this.state.currentUser.createRoom({
+            // id: '#general',
+            name: newRoom.name,
+            // private: newRoom.privacy,
+            // addUserIds: ['craig', 'kate'],
+        }).then(room => {
+            console.log(`Created room called ${room.name}`)
+            })
+        .catch(err => {
+            console.log(`Error creating room ${err}`)
+        })
     }
 
     updateJoinedRooms() {

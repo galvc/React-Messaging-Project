@@ -4,67 +4,47 @@ class CreateRoom extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            roomName: '',
+            name: '',
             privacy: '',
-            roomNameValid: false,
-            privacyValid: false,
-            showError: false
+            hasError: true
         }
-
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
     handleSubmit(event) {
         event.preventDefault()
+        if (!this.state.hasError){
+            console.log('handleSUbmit ' + this.state.hasError)
 
-
-        console.log(this.state.roomNameValid + ' ' + this.state.privacyValid)
-
-        if (this.state.roomNameValid && this.state.privacyValid) {
-            console.log('both are valid')
-            this.setState({ showError: false })
-            const room = {
-                roomName: this.state.roomName,
-                privacy: this.state.privacy
-            }
-            console.log('all valid')
-            this.props.createRoom({ room })
+            this.props.createRoom({ 
+                name: this.state.name,
+                privacy: this.state.privacy 
+            })
         }
-
     }
 
     handleChange(event) {
-        const roomName = event.target.type === 'text' ? event.target.value : this.state.roomName
+        const name = event.target.type === 'text' ? event.target.value : this.state.name
         const privacy = event.target.type === 'radio' ? event.target.value : this.state.privacy
-
+        const hasError = (this.state.name.length === 0) || (this.state.privacy.length === 0)
+        console.log('handleChange ' + this.state.hasError)
         this.setState({
-            roomName,
-            privacy
+            name,
+            privacy,
+            hasError
         })
-
-        if (this.state.roomName.length > 0) {
-            console.log('room name is valid')
-            this.setState({ roomNameValid: true })
-        } else {
-            this.setState({ roomNameValid: false, showError: true })
-        }
-
-        if (this.state.privacy.length > 0) {
-            console.log('privacy is valid')
-            this.setState({ privacyValid: true })
-        } else {
-            this.setState({ privacyValid: false, showError: true })
-        }
     }
     render() {
         return (
             <div>
                 <h1>Create a room</h1>
+                {(this.state.hasError) && <p>You must enter a room name and choose a private or public room</p>}
+
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Room Name
-                    <input type="text" name="Room Name" value={this.state.roomName} onChange={this.handleChange} />
+                    <input type="text" name="Room Name" value={this.state.name} onChange={this.handleChange} placeholder="Enter a room name" />
                     </label>
                     <br />
                     <label>
@@ -76,10 +56,6 @@ class CreateRoom extends Component {
                     <br />
                     <input type="submit" value="Submit" />
                 </form>
-                <div>
-                    {(!this.state.roomNameValid && this.state.showError) && <p>You must have a room name</p>}
-                    {(!this.state.privacyValid && this.state.showError) && <p>You must choose between a public and private room</p>}
-                </div>
             </div>
         )
     }
