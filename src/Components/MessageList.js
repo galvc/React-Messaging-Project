@@ -1,43 +1,65 @@
- import React, { Component } from 'react'
+import React, { Component } from 'react'
+import styled from 'styled-components'
+
+const Container = styled.div`
+    overflow-y: scroll;
+    flex:1
+    padding-right: 1em;
+
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    li {
+        margin: 1em 0;
+        background: #C1C7FF;
+        border-radius: 5px;
+        width: fit-content; 
+        min-width: 10em;
+        padding: 0.50em;
+    }
+
+    .senderUsername {
+        font-weight: bold;
+    }
+
+    p {
+        margin-top: 0.5em
+        margin-bottom: 0;
+    }
+
+    .currentUserMessage {
+        align-self: flex-end;
+    }
+`
 
  class MessageList extends Component {
      
    render() {
      const styles = {
-       container: {
-         overflowY: 'scroll',
-         flex: 1,
-       },
-       ul: {
-         listStyle: 'none',
-       },
-       li: {
-         marginTop: 13,
-         marginBottom: 13,
-       },
-       senderUsername: {
-         fontWeight: 'bold',
-       },
+
        message: { fontSize: 15 },
      }
+
+
      return (
-       <div
-         style={{
-           ...this.props.style,
-           ...styles.container,
-         }}
-       >
-         <ul style={styles.ul}>
+       <Container>
+       
+         <ul>
            {this.props.messages.map((message, index) => (
-             <li key={index} style={styles.li}>
-               <div>
-                 <span style={styles.senderUsername}>{message.senderId}</span>{' '}
-               </div>
-               <p style={styles.message}>{message.parts[0].payload.content}</p>
+             <li key={index} className={message.senderId === (this.props.currentUser.id) ? "currentUserMessage" : "" } > 
+                <div>
+                    <span className="senderUsername">{message.senderId}</span>
+                    <p style={styles.message}>{message.parts[0].payload.content}</p>
+                </div>
+                {/* <span>{message.createdAt}</span> */}
              </li>
            ))}
          </ul>
-       </div>
+       </Container>
      )
    }
  }

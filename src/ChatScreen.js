@@ -8,6 +8,7 @@ import WhosOnlineList from './Components/WhosOnlineList'
 import RoomList from './Components/RoomList'
 import JoinScreen from './Components/JoinScreen'
 import CreateRoom from './Components/CreateRoom'
+import CurrentRoomHeader from './Components/CurrentRoomHeader';
 // const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
 // const localhost = 'http://localhost:3000'
 
@@ -40,6 +41,7 @@ class ChatScreen extends Component {
         this.getRoomsToJoin = this.getRoomsToJoin.bind(this)
         this.openRoom = this.openRoom.bind(this)
         this.leaveRoom = this.leaveRoom.bind(this)
+        this.deleteRoom = this.deleteRoom.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
         this.fetchMessagesByRoom = this.fetchMessagesByRoom.bind(this)
         this.sendTypingEvent = this.sendTypingEvent.bind(this)
@@ -215,6 +217,17 @@ class ChatScreen extends Component {
             })
 
     }
+
+    deleteRoom() {
+        const roomId = this.state.currentRoom.id
+        this.state.currentUser.deleteRoom({ roomId })
+        .then(() => {
+        console.log(`Deleted room with ID: ${roomId}`)
+        })
+        .catch(err => {
+        console.log(`Error deleted room ${roomId}: ${err}`)
+        })
+    }
     sendMessage(text) {
         this.state.currentUser.sendSimpleMessage({
             text,
@@ -332,7 +345,11 @@ class ChatScreen extends Component {
 
                     </aside>
                     <section style={styles.chatListContainer}>
-                        <h2>Chat PLACEHOLDER</h2>
+                    <CurrentRoomHeader 
+                        currentRoom={this.state.currentRoom} 
+                        deleteRoom={this.deleteRoom}
+                    />
+                        {/* <h2>{this.state.currentRoom.name}</h2> */}
                         {this.state.isCreateRoomOpen &&
                             <CreateRoom createRoom={this.createRoom} />
                         }
@@ -343,6 +360,7 @@ class ChatScreen extends Component {
                         <MessageList
                             messages={this.state.messages}
                             style={styles.chatListContainer}
+                            currentUser={this.state.currentUser}
                         />
                         <TypingIndicator usersWhoAreTyping={this.state.usersWhoAreTyping} />
                         <SendMessageForm onSubmit={this.sendMessage} onChange={this.sendTypingEvent} />

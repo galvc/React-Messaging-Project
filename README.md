@@ -36,12 +36,14 @@ i am thinking maybe it's because the joinedroom state which is higher than the p
 or maybe nott, bug is still there - it;s just not gonna work this way i will have t do the checking in state, component will nto be rendered every time i click
 so thats why there is no change
 http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
--trying to create a room. i want to change the chatlist component to create a room component
--creatin g a new room wont work because im passing an object within an object,. i made a new object before passing that into props and thats whats
-making it not work
+
 - i also have another problem where createroom() and createroom = () => how diff are they?
-- when i create a room, updat the roomlist and switch to that room
+! - when i create a room, updat the roomlist and switch to that room 
 what is the difference between being added and joining  a room in the hooks? - prpably the other one is for other users joining a room
+- use either room name or component name...
+-maybe use a popup for createroom instead
+-  room header + chatlist or room header / chatlist = what are the pros and cons???
+-delete room works after giving a the permissions, however the roomlist does not get updaeted
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been
@@ -87,6 +89,10 @@ i guess when the function retrieves the data of the state it doesn't retrieve it
 doesnt work real time or both equating to false  - for now im using both instruction and error as the same line
 - the handlechange of privacy dioesnt work properly, i also need to convert it into boolean
 onaddedtoroom doesnt work - im using the wrong hooks this is for the  connection hook, i put it in the room subscription hook - IT WORKS NOW
+-trying to create a room. i want to change the chatlist component to create a room component
+-creatin g a new room wont work because im passing an object within an object,. i made a new object before passing that into props and thats whats
+making it not work
+
 
 ## Todo
 [x] Develop own UI - created UI in Figma
@@ -103,7 +109,7 @@ onaddedtoroom doesnt work - im using the wrong hooks this is for the  connection
 [] update a room if you are admin
 [x] update the list of users when room changes
 [] delete a room 
-
+[] notification section
 ##Readings
 - https://towardsdatascience.com/passing-data-between-react-components-parent-children-siblings-a64f89e24ecf
 <!-- - popup menu in react https://blog.logrocket.com/controlling-tooltips-pop-up-menus-using-compound-components-in-react-ccedc15c7526/ -->
