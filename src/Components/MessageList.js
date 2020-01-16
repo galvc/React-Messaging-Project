@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
+    height: 100vh;
     overflow-y: scroll;
     flex:1
     padding-right: 1em;
-
+    background: #EFF6FE;
+    padding: 2em;
     ul {
         list-style-type: none;
         padding-left: 0;
@@ -15,7 +17,7 @@ const Container = styled.div`
 
     li {
         margin: 1em 0;
-        background: #C1C7FF;
+        background: white;
         border-radius: 5px;
         width: fit-content; 
         min-width: 10em;

@@ -73,7 +73,7 @@ class ChatScreen extends Component {
                 //what is th ebest practice?
                 console.log(`room ${room} has been deleted`)
                 this.updateJoinedRooms()
-                this.setState({ currentRoom: this.state.joinedRooms[0] })
+                // this.setState({ currentRoom: this.state.joinedRooms[0] })
                 //go to the first room in joined rooms
             }
         })
@@ -232,8 +232,9 @@ class ChatScreen extends Component {
     deleteRoom() {
         const roomId = this.state.currentRoom.id
         this.state.currentUser.deleteRoom({ roomId })
-        .then(() => {
-        console.log(`Deleted room with ID: ${roomId}`)
+        .then((room) => {
+            this.setState({ currentRoom: this.state.joinedRooms[0] })
+            console.log(`Deleted room with ID: ${roomId}`)
         })
         .catch(err => {
         console.log(`Error deleted room ${roomId}: ${err}`)
@@ -346,7 +347,7 @@ class ChatScreen extends Component {
                 color: 'white',
             },
             chatListContainer: {
-                padding: 20,
+                // padding: 20,
                 width: '85%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -366,7 +367,7 @@ class ChatScreen extends Component {
                             joinARoom={this.joinRoom}
                             joinedRooms={this.state.joinedRooms}
                             joinableRooms={this.state.joinableRooms}
-                            leaveRoom={this.leaveRoom}
+                            // leaveRoom={this.leaveRoom}
                             openRoom={this.openRoom}
                         />
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}

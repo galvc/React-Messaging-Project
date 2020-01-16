@@ -45,17 +45,9 @@ what is the difference between being added and joining  a room in the hooks? - p
 -  room header + chatlist or room header / chatlist = what are the pros and cons???
 -delete room works after giving a the permissions, however the roomlist does not get updaeted
 - add more hooks
-- when i have deleted a room, use the first joined room's screen
-im getting bugs --- when i create a room, i try to change the ucrrent room to it so the screen changes... it is telling 
-me that i am currently not subscribed so it wont delete the room
-Created room called aaaa
-ChatScreen.js:292 joining from chatscreen ee7ba556-4818-412c-b46e-0661fcad3035
-ChatScreen.js:305 Joined room with ID: ee7ba556-4818-412c-b46e-0661fcad3035
-index.js:1 Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
-ChatScreen.js:188 this updates the current users joined rooms[object Object],[object Object],[object Object]
-ChatScreen.js:211 this is the updated state of joinable rooms: [{"createdAt":"2020-01-04T21:43:37Z","createdByUserId":"a","id":"f53a5a42-ecca-4112-b4ee-8b836f687b35","isPrivate":false,"name":"room 2","updatedAt":"2020-01-04T21:43:37Z"}]
-im calling setstate currentroom: room too early in the hooks!!!
-
+- when i delete a room, i am still in that currentroom state so i get subscription errors
+when i moved the currentroom setstate from hooks to delete room it is ok, 
+- move leave room to the currentroomheader
 
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
@@ -105,6 +97,16 @@ onaddedtoroom doesnt work - im using the wrong hooks this is for the  connection
 -trying to create a room. i want to change the chatlist component to create a room component
 -creatin g a new room wont work because im passing an object within an object,. i made a new object before passing that into props and thats whats
 making it not work
+- when i have deleted a room, use the first joined room's screen
+im getting bugs --- when i create a room, i try to change the ucrrent room to it so the screen changes... it is telling 
+me that i am currently not subscribed so it wont delete the room
+Created room called aaaa
+ChatScreen.js:292 joining from chatscreen ee7ba556-4818-412c-b46e-0661fcad3035
+ChatScreen.js:305 Joined room with ID: ee7ba556-4818-412c-b46e-0661fcad3035
+index.js:1 Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+ChatScreen.js:188 this updates the current users joined rooms[object Object],[object Object],[object Object]
+ChatScreen.js:211 this is the updated state of joinable rooms: [{"createdAt":"2020-01-04T21:43:37Z","createdByUserId":"a","id":"f53a5a42-ecca-4112-b4ee-8b836f687b35","isPrivate":false,"name":"room 2","updatedAt":"2020-01-04T21:43:37Z"}]
+im calling setstate currentroom: room too early in the hooks!!! - i set the state of current room after updating everything else in create and join room
 
 
 ## Todo
