@@ -62,10 +62,20 @@ class ChatScreen extends Component {
 
         chatManager.connect({
             onAddedToRoom: room => {
-            //should i change state or call the room fetch??...
-            this.setState({
-                joinedRooms: [...this.state.joinedRooms, room]
-            })},
+                //should i change state or call the room fetch??...
+                this.setState({
+                    joinedRooms: [...this.state.joinedRooms, room],
+                    // currentRoom: room calling this too early
+                })
+            },
+            onRoomDeleted: room => {
+                //should i use the update room function or just do it here???
+                //what is th ebest practice?
+                console.log(`room ${room} has been deleted`)
+                this.updateJoinedRooms()
+                this.setState({ currentRoom: this.state.joinedRooms[0] })
+                //go to the first room in joined rooms
+            }
         })
             .then(currentUser => {
                 this.setState({ currentUser })
@@ -154,15 +164,16 @@ class ChatScreen extends Component {
             })
     }
 
-    createRoom(newRoom) {
+     createRoom(newRoom) {
         console.log('passed to create room successfully')
-        this.state.currentUser.createRoom({
+         this.state.currentUser.createRoom({
             // id: '#general',
             name: newRoom.name,
             // private: newRoom.privacy,
             // addUserIds: ['craig', 'kate'],
         }).then(room => {
             console.log(`Created room called ${room.name}`)
+            this.joinRoom(room)
             })
         .catch(err => {
             console.log(`Error creating room ${err}`)
@@ -280,16 +291,34 @@ class ChatScreen extends Component {
     joinRoom = room => {
         console.log('joining from chatscreen ' + room.id)
 
-        this.state.currentUser.joinRoom({ roomId: room.id })
-            .then(room => {
-                console.log(`Joined room with ID: ${room.id}`)
-                this.updateJoinedRooms()
-                this.getRoomsToJoin()
-                this.setState({ roomToJoin: {} })
-            })
-            .catch(err => {
-                console.log(`Error joining room ${room.id}: ${err}`)
-            })
+        // this.state.currentUser.joinRoom({ roomId: room.id })
+        //     .then(room => {
+        //         console.log(`Joined room with ID: ${room.id}`)
+        //         this.updateJoinedRooms()
+        //         this.getRoomsToJoin()
+        //         this.setState({ roomToJoin: {} })
+        //     })
+        //     .catch(err => {
+        //         console.log(`Error joining room ${room.id}: ${err}`)
+        //     })
+        const roomId = room.id
+        console.log(`Joined room with ID: ${room.id}`)
+        this.state.currentUser.subscribeToRoomMultipart({
+            roomId,
+            hooks: {
+                onMessage: message => {
+                console.log("received message", message)
+                }
+            },
+            messageLimit: 10
+        }).then(room => 
+            this.setState({ currentRoom: room })
+
+        )
+            //check this out later
+        this.updateJoinedRooms()
+        this.getRoomsToJoin()
+        this.setState({ roomToJoin: {} })
     }
 
     //the only thinmg this does is update the state of roomtojoin
