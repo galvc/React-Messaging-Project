@@ -45,7 +45,7 @@ class App extends Component {
 
 
   render() {
-    if (this.state.currentScreen === 'none') { //why not use a router?
+    if (this.state.currentScreen === 'none') { 
       return <UsernameForm onSubmit={this.onUsernameSubmitted} />
     }
     if (this.state.currentScreen === 'ChatScreen') {

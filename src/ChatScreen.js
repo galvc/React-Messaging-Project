@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ChatManager, TokenProvider } from "@pusher/chatkit-client"
 import Chatkit from '@pusher/chatkit-server';
+import styled from 'styled-components'
 import MessageList from './Components/MessageList'
 import SendMessageForm from './Components/SendMessageForm'
 import TypingIndicator from './Components/TypingIndicator'
@@ -9,6 +10,7 @@ import RoomList from './Components/RoomList'
 import JoinScreen from './Components/JoinScreen'
 import CreateRoom from './Components/CreateRoom'
 import CurrentRoomHeader from './Components/CurrentRoomHeader';
+import { FaPlus } from 'react-icons/fa'
 // const localhost = 'https://3000-a472df6c-5a6c-426c-abc7-6c5a44e38135.ws-us02.gitpod.io';
 // const localhost = 'http://localhost:3000'
 
@@ -362,10 +364,12 @@ class ChatScreen extends Component {
             <div style={styles.container}>
                 <div style={styles.chatContainer}>
                     <aside style={styles.whosOnlineListContainer}>
-                        <WhosOnlineList
-                            currentUser={this.state.currentUser}
-                            users={this.state.currentRoom.users}
-                        />
+
+                        {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
+                        <CreateRoomButton onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen })}>
+                            Create a room <FaPlus size={12} />
+                        </CreateRoomButton>
+
                         <RoomList
                             setJoinScreen={this.setJoinScreen}
                             joinARoom={this.joinRoom}
@@ -375,9 +379,11 @@ class ChatScreen extends Component {
                             openRoom={this.openRoom}
                             fetchMessages={this.fetchMessagesByRoom}
                         />
-                        {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
-                        <p onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen })}>Create a room</p>
-
+                        
+                        <WhosOnlineList
+                            currentUser={this.state.currentUser}
+                            users={this.state.currentRoom.users}
+                        />
                     </aside>
                     <section style={styles.chatListContainer}>
                     <CurrentRoomHeader 
@@ -409,3 +415,18 @@ class ChatScreen extends Component {
 }
 
 export default ChatScreen
+
+const CreateRoomButton = styled.button`
+    font-weight: bold; 
+    width: 100%;
+    color: #C6C9CE;
+    background: transparent;
+    border: none;
+    font-size: 1.05em;
+    padding: 0.25em;
+    cursor: pointer;
+
+        &:hover{
+            color: white;
+        }
+`;

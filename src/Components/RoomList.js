@@ -26,18 +26,17 @@ const RoomItem = styled.li`
     align-items: center;
     list-style-type: none;
     transition: 0.3s all ease;
-
+    color: #C6C9CE;
+    padding: 0.50em 0;
     &:hover {
         cursor: pointer;
         background: #2B3546;
     }
 
-    span {
-        padding: 0.50em 0;
-    }
-
-    .active {
+    &.active {
         background: #303B4E;
+        color: white;
+        font-weight: bold;
     }
 `
 
@@ -77,17 +76,13 @@ class RoomList extends Component {
                             <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span>
                         </RoomItem>
                     )}
-                </List>
-                <List>
                     {this.props.joinableRooms.map((room, index) => 
                         <RoomItem key={index}>
-                        {room.name}
+                            {room.name}
                             <Button onClick={() => this.handleJoin(room)}>Join Room</Button>
                         </RoomItem>
                     )}
-                    
                 </List>
-                
             </div>
         )
     }

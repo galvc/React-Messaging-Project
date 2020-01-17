@@ -99,15 +99,16 @@ making it not work
 - when i have deleted a room, use the first joined room's screen
 im getting bugs --- when i create a room, i try to change the ucrrent room to it so the screen changes... it is telling 
 me that i am currently not subscribed so it wont delete the room
-Created room called aaaa
-ChatScreen.js:292 joining from chatscreen ee7ba556-4818-412c-b46e-0661fcad3035
-ChatScreen.js:305 Joined room with ID: ee7ba556-4818-412c-b46e-0661fcad3035
-index.js:1 Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
-ChatScreen.js:188 this updates the current users joined rooms[object Object],[object Object],[object Object]
-ChatScreen.js:211 this is the updated state of joinable rooms: [{"createdAt":"2020-01-04T21:43:37Z","createdByUserId":"a","id":"f53a5a42-ecca-4112-b4ee-8b836f687b35","isPrivate":false,"name":"room 2","updatedAt":"2020-01-04T21:43:37Z"}]
-im calling setstate currentroom: room too early in the hooks!!! - i set the state of current room after updating everything else in create and join room
+    Created room called aaaa
+    ChatScreen.js:292 joining from chatscreen ee7ba556-4818-412c-b46e-0661fcad3035
+    ChatScreen.js:305 Joined room with ID: ee7ba556-4818-412c-b46e-0661fcad3035
+    index.js:1 Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+    ChatScreen.js:188 this updates the current users joined rooms[object Object],[object Object],[object Object]
+    ChatScreen.js:211 this is the updated state of joinable rooms: [{"createdAt":"2020-01-04T21:43:37Z","createdByUserId":"a","id":"f53a5a42-ecca-4112-b4ee-8b836f687b35","isPrivate":false,"name":"room 2","updatedAt":"2020-01-04T21:43:37Z"}]
+    im calling setstate currentroom: room too early in the hooks!!! - i set the state of current room after updating everything else in create and join room
 - move leave room to the currentroomheader
 - i have redundant functions fetch messages and open room...openroom is basically just subscribing to it...
+-im trying to make the active room different
 
 ## Todo
 [x] Develop own UI - created UI in Figma
@@ -125,6 +126,10 @@ im calling setstate currentroom: room too early in the hooks!!! - i set the stat
 [x] update the list of users when room changes
 [] delete a room 
 [] notification section
+[] tooltip https://github.com/wwayne/react-tooltip
+[x] modify enterusername UI
+[] add animatioNs
+
 ##Readings
 - https://towardsdatascience.com/passing-data-between-react-components-parent-children-siblings-a64f89e24ecf
 <!-- - popup menu in react https://blog.logrocket.com/controlling-tooltips-pop-up-menus-using-compound-components-in-react-ccedc15c7526/ -->
