@@ -47,8 +47,7 @@ what is the difference between being added and joining  a room in the hooks? - p
 - add more hooks
 - when i delete a room, i am still in that currentroom state so i get subscription errors
 when i moved the currentroom setstate from hooks to delete room it is ok, 
-- move leave room to the currentroomheader
-
+- joinable rooms are not updating properly
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been
@@ -107,7 +106,8 @@ index.js:1 Warning: Can't perform a React state update on an unmounted component
 ChatScreen.js:188 this updates the current users joined rooms[object Object],[object Object],[object Object]
 ChatScreen.js:211 this is the updated state of joinable rooms: [{"createdAt":"2020-01-04T21:43:37Z","createdByUserId":"a","id":"f53a5a42-ecca-4112-b4ee-8b836f687b35","isPrivate":false,"name":"room 2","updatedAt":"2020-01-04T21:43:37Z"}]
 im calling setstate currentroom: room too early in the hooks!!! - i set the state of current room after updating everything else in create and join room
-
+- move leave room to the currentroomheader
+- i have redundant functions fetch messages and open room...openroom is basically just subscribing to it...
 
 ## Todo
 [x] Develop own UI - created UI in Figma

@@ -144,7 +144,7 @@ class ChatScreen extends Component {
 
         //i need to be subscribed first before i can set the users
         this.setState({
-            messages: []
+            messages: [],
         })
         this.state.currentUser.subscribeToRoomMultipart({
             roomId: room.id,
@@ -158,6 +158,7 @@ class ChatScreen extends Component {
         })
             .then(currentRoom => {
                 this.setState({ currentRoom })
+                console.log('new room: ' + currentRoom.id)
             })
             .catch(error => {
                 console.error("error:", error);
@@ -216,15 +217,18 @@ class ChatScreen extends Component {
     }
 
 
-    leaveRoom = (room) => {
+    leaveRoom() {
         console.log('leave room is clicked')
-        this.state.currentUser.leaveRoom({ roomId: room.id })
+        const roomId = this.state.currentRoom.id
+        this.state.currentUser.leaveRoom({ roomId })
             .then(room => {
-                this.updateJoinedRooms()
+                this.updateJoinedRooms() //this doesnt work properly
                 this.getRoomsToJoin()
+                this.setState({ currentRoom: this.state.joinedRooms[0] }) //i migh have to just filter this later instead of this
+                //might be ineffective because of async
             })
             .catch(err => {
-                console.log(`Error leaving room ${room.id}: ${err}`)
+                console.log(`Error leaving room ${roomId}: ${err}`)
             })
 
     }
@@ -258,7 +262,7 @@ class ChatScreen extends Component {
         //do i need to do checking for this or let the error make it work?
         //or do i just show an error handler in the roomlist???????
         console.log('fetching message from room id: ' + room.id)
-        this.setState({ roomToJoin: {} }) //i wonder if this is the best location to clear the state?
+        this.setState({ roomToJoin: {}, currentRoom: room }) //i wonder if this is the best location to clear the state?
         this.state.currentUser.fetchMultipartMessages({
             roomId: room.id,
             direction: 'older',
@@ -343,7 +347,7 @@ class ChatScreen extends Component {
                 width: '300px',
                 flex: 'none',
                 padding: 20,
-                backgroundColor: '#2c303b',
+                backgroundColor: '#344055',
                 color: 'white',
             },
             chatListContainer: {
@@ -367,8 +371,9 @@ class ChatScreen extends Component {
                             joinARoom={this.joinRoom}
                             joinedRooms={this.state.joinedRooms}
                             joinableRooms={this.state.joinableRooms}
-                            // leaveRoom={this.leaveRoom}
+                            currentRoom={this.state.currentRoom}
                             openRoom={this.openRoom}
+                            fetchMessages={this.fetchMessagesByRoom}
                         />
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
                         <p onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen })}>Create a room</p>
@@ -378,6 +383,7 @@ class ChatScreen extends Component {
                     <CurrentRoomHeader 
                         currentRoom={this.state.currentRoom} 
                         deleteRoom={this.deleteRoom}
+                        leaveRoom={this.leaveRoom}
                     />
                         {/* <h2>{this.state.currentRoom.name}</h2> */}
                         {this.state.isCreateRoomOpen &&

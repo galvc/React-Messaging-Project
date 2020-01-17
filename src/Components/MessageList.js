@@ -8,6 +8,7 @@ const Container = styled.div`
     padding-right: 1em;
     background: #EFF6FE;
     padding: 2em;
+
     ul {
         list-style-type: none;
         padding-left: 0;
@@ -16,7 +17,7 @@ const Container = styled.div`
     }
 
     li {
-        margin: 1em 0;
+        margin: 0.5em 0;
         background: white;
         border-radius: 5px;
         width: fit-content; 

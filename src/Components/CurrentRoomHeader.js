@@ -44,7 +44,7 @@ class CurrentRoomHeader extends Component {
                 <ul className="menu">
                     <li onClick={() => this.props.deleteRoom()}><TiDeleteOutline size={28} /></li>    
                     <li><FaInfo size={24} /></li>
-                    <li onClick={() => this.props.leaveRoom()}><GiExitDoor /></li>
+                    <li onClick={() => this.props.leaveRoom()} ><GiExitDoor size={28} /></li>
                 </ul>
             </RoomHeader>
             

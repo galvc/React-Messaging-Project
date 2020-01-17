@@ -11,14 +11,34 @@ import styled from 'styled-components'
 //https://gist.github.com/sebkouba/a5ac75153ef8d8827b98
 
 const Button = styled.div`
-    padding: 0.25em;
-    border: 1px solid black;
+    font-weight: bold;
+    color: #7D8592;
+
+    &:hover{
+        cursor: pointer;
+        color: #C7CAD0;
+        transition: 0.3s all ease;
+    }
 `
 const RoomItem = styled.li`
     display: flex;
     justify-content: space-between;
     align-items: center;
     list-style-type: none;
+    transition: 0.3s all ease;
+
+    &:hover {
+        cursor: pointer;
+        background: #2B3546;
+    }
+
+    span {
+        padding: 0.50em 0;
+    }
+
+    .active {
+        background: #303B4E;
+    }
 `
 
 const List = styled.ul`
@@ -27,15 +47,10 @@ const List = styled.ul`
 
 class RoomList extends Component {
 
-    // change roomId to just room object
     handleJoin = (room) => {
         console.log(`joined the room ${room.id}`)
         
         this.props.joinARoom(room)
-    }
-
-    handleLeave = (room) => {
-        this.props.leaveRoom(room)
     }
 
     handleIsJoined = (room) => {
@@ -45,10 +60,11 @@ class RoomList extends Component {
     handleOpenRoom = (room) => {
         console.log('starting to open a room from roomlist')
         console.log(room.id)
+
+        console.log('this is props: ' + this.props.currentRoom.id)
         this.props.openRoom(room)
+        // this.props.fetchMessages(room)
     }
-    //click the room name of joined rooms and updat the state.messages 
-    //if i am in the current room dont let me handle openroom
     render() {
 
         return (
@@ -56,11 +72,9 @@ class RoomList extends Component {
                 <h1>Room List</h1>
                 <List>
                     {this.props.joinedRooms.map((room, index) => 
-                        <RoomItem key={index}>
-                            <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span>
                         
-
-                            <Button onClick={() => this.handleLeave(room)}>Leave Room</Button>
+                        <RoomItem key={index} className={room.id == this.props.currentRoom.id ? "active" : ""}>
+                            <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span>
                         </RoomItem>
                     )}
                 </List>
