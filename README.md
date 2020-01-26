@@ -48,6 +48,7 @@ what is the difference between being added and joining  a room in the hooks? - p
 - when i delete a room, i am still in that currentroom state so i get subscription errors
 when i moved the currentroom setstate from hooks to delete room it is ok, 
 - joinable rooms are not updating properly
+
 ### Solved
 - after commmenting .map out this error shows up in chatscreen.js - error reading request body error 400. See below
 - messages weren't showing up, .map error. Solution: wrong this.state name. I also fixed the object properties for the message text, it has since been

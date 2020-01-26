@@ -72,7 +72,7 @@ class RoomList extends Component {
                 <List>
                     {this.props.joinedRooms.map((room, index) => 
                         
-                        <RoomItem key={index} className={room.id == this.props.currentRoom.id ? "active" : ""}>
+                        <RoomItem key={index} className={room.id === this.props.currentRoom.id ? "active" : ""}>
                             <span onClick={() => this.handleOpenRoom(room)}>{room.name}</span>
                         </RoomItem>
                     )}

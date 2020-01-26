@@ -8,12 +8,13 @@ import { GiExitDoor } from 'react-icons/gi'
 const RoomHeader = styled.div`
     display: flex;
     justify-content: space-between;
-    background: #4162FE;
+    background: white;
     color: white;
     padding: 0 1em;
 
     h2 {
         margin: 0.5em 0;
+        color: #4162FE;
     }
 
     ul.menu {
@@ -27,6 +28,7 @@ const RoomHeader = styled.div`
         display: inline-block;
         padding: 0.7em 0.5em;
         opacity: 0.5;
+        color: #4162FE;
     }
 
     li:hover {

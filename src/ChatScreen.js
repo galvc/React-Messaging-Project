@@ -361,10 +361,9 @@ class ChatScreen extends Component {
         }
 
         return (
-            <div style={styles.container}>
-                <div style={styles.chatContainer}>
-                    <aside style={styles.whosOnlineListContainer}>
-
+            <Container>
+                <ChatContainer>
+                    <ListContainer>
                         {/* like the messagelist, put the rooms in state then pass that to the component, map it */}
                         <CreateRoomButton onClick={() => this.setState({ isCreateRoomOpen: !this.state.isCreateRoomOpen })}>
                             Create a room <FaPlus size={12} />
@@ -384,8 +383,8 @@ class ChatScreen extends Component {
                             currentUser={this.state.currentUser}
                             users={this.state.currentRoom.users}
                         />
-                    </aside>
-                    <section style={styles.chatListContainer}>
+                    </ListContainer>
+                    <div style={styles.chatListContainer}>
                     <CurrentRoomHeader 
                         currentRoom={this.state.currentRoom} 
                         deleteRoom={this.deleteRoom}
@@ -406,9 +405,9 @@ class ChatScreen extends Component {
                         />
                         <TypingIndicator usersWhoAreTyping={this.state.usersWhoAreTyping} />
                         <SendMessageForm onSubmit={this.sendMessage} onChange={this.sendTypingEvent} />
-                    </section>
-                </div>
-            </div>
+                    </div>
+                </ChatContainer>
+            </Container>
         )
 
     }
@@ -430,3 +429,20 @@ const CreateRoomButton = styled.button`
             color: white;
         }
 `;
+
+const Container = styled.div`
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+`
+
+const ChatContainer = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+
+`
+
+const ListContainer = styled.div`
+    background: #344055;
+    color: white;
+`

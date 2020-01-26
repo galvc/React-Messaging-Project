@@ -50,26 +50,28 @@ class UsernameForm extends Component {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
 
-    div.form {
-        text-align: center;
+    form {
+        width: 24em;
     }
     
     h2 {
         color: white;
         font-size: 1.75em;
     }
+
     input {
         height: 3em;
         width: 100%;
         border: 0;
         border-radius: 5px;
-        margin-right: 0.75em;
         transition: max-height 0.3s ease-out;
     }
 
     input[type=text] {
         padding: 0 0.50em;
+        box-sizing: border-box;
     }
 
     input[type=submit]:disabled {
@@ -78,8 +80,17 @@ class UsernameForm extends Component {
 
     input[type=submit] {
         background: #303B4E;
+        border: 1px solid transparent;
         font-weight: bold;
         font-size: 1em;
         color: white;
+        margin: 0.50em auto;
+        cursor: pointer;
+        transition: 0.3s all ease;
+    }
+
+    input[type=submit]:hover {
+        background: #424C5E;
+        border: 1px solid #68707E; 
     }
  `
